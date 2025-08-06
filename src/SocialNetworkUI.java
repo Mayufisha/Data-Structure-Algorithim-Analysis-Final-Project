@@ -202,7 +202,9 @@ public class SocialNetworkUI {
             case 6: handleFriendSuggestions(); break;
             case 7: handleShowAllUsers(); break;
             case 8: network.getStats().displayStats(); break;
-            case 9: handleShortestPath(); break;
+            case 9:
+                handleShortestPath();
+                break;
             case 0: System.out.println("Thank you for using Social Network Graph Explorer!"); break;
             default: System.out.println("Invalid option. Please try again.");
         }
