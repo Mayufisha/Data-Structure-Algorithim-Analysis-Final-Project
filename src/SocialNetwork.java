@@ -74,12 +74,25 @@ public class SocialNetwork {
     }
 
     public void initializeSampleData() {
-        String[] sampleUsers = {"alice", "bob", "charlie", "diana", "eve", "frank"};
+        String[] sampleUsers = {
+                "alice", "bob", "charlie", "diana", "eve", "frank",
+                "grace", "heidi", "ivan", "judy"
+        };
+
         String[][] friendships = {
                 {"alice", "bob"}, {"alice", "charlie"}, {"bob", "diana"},
-                {"charlie", "eve"}, {"diana", "frank"}, {"eve", "frank"}
+                {"charlie", "eve"}, {"diana", "frank"}, {"eve", "frank"},
+                {"grace", "heidi"}, {"heidi", "ivan"}, {"ivan", "judy"},
+                {"judy", "grace"}, {"bob", "grace"}, {"alice", "heidi"}
         };
-        for (String user : sampleUsers) addUser(user);
-        for (String[] pair : friendships) addFriendship(pair[0], pair[1]);
+
+        for (String user : sampleUsers) {
+            addUser(user);
+        }
+
+        for (String[] pair : friendships) {
+            addFriendship(pair[0], pair[1]);
+        }
     }
+
 }
