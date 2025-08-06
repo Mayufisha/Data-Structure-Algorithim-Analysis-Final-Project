@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GraphOperations {
     public static boolean areConnected(String user1, String user2, Map<String, User> users) {
@@ -61,5 +62,17 @@ public class GraphOperations {
             }
         }
         return null;
+    }
+
+    public static Set<String> findMutualFriends(String user1, String user2, Map<String, User> users) {
+        if (user1 == null || user2 == null) return new HashSet<>();
+        user1 = user1.trim().toLowerCase();
+        user2 = user2.trim().toLowerCase();
+
+        if (!users.containsKey(user1) || !users.containsKey(user2)) return new HashSet<>();
+
+        Set<String> friends1 = users.get(user1).getFriends();
+        Set<String> friends2 = users.get(user2).getFriends();
+        return friends1.stream().filter(friends2::contains).collect(Collectors.toSet());
     }
 }
