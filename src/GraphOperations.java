@@ -75,4 +75,26 @@ public class GraphOperations {
         Set<String> friends2 = users.get(user2).getFriends();
         return friends1.stream().filter(friends2::contains).collect(Collectors.toSet());
     }
+
+    public static Set<String> suggestFriends(String username, Map<String, User> users) {
+        if (username == null) return new HashSet<>();
+        username = username.trim().toLowerCase();
+        if (!users.containsKey(username)) return new HashSet<>();
+
+        Set<String> directFriends = users.get(username).getFriends();
+        Set<String> suggestions = new HashSet<>();
+        Set<String> toExclude = new HashSet<>(directFriends);
+        toExclude.add(username);
+
+        for (String friend : directFriends) {
+            if (users.containsKey(friend)) {
+                for (String foaf : users.get(friend).getFriends()) {
+                    if (!toExclude.contains(foaf)) {
+                        suggestions.add(foaf);
+                    }
+                }
+            }
+        }
+        return suggestions;
+    }
 }
