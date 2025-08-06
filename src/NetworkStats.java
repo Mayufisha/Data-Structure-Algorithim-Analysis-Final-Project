@@ -39,10 +39,23 @@ public class NetworkStats {
         System.out.println("Total friendships: " + getTotalConnections());
         System.out.printf("Average friends per user: %.2f\n", getAverageFriendsPerUser());
 
-        User mostPopular = getMostPopularUser();
-        if (mostPopular != null) {
-            System.out.println("Most popular user: " + mostPopular.getUsername() +
-                    " (" + mostPopular.getFriendCount() + " friends)");
+        // Get the max number of friends
+        int maxFriends = users.values().stream()
+                .mapToInt(User::getFriendCount)
+                .max()
+                .orElse(0);
+
+        // Get all users who have max number of friends
+        List<String> mostPopularUsers = users.values().stream()
+                .filter(u -> u.getFriendCount() == maxFriends)
+                .map(User::getUsername)
+                .sorted()
+                .toList();
+
+        if (!mostPopularUsers.isEmpty()) {
+            System.out.println("Most popular user(s): " + String.join(", ", mostPopularUsers)
+                    + " (" + maxFriends + " friends)");
         }
     }
+
 }
