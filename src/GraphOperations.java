@@ -28,6 +28,52 @@ public class GraphOperations {
         return false;
     }
 
+    public static List<String> findLightestPath(
+            String src, String dst,
+            Map<String, User> users,
+            Map<String, Map<String, Integer>> adj) {
+
+        if (src == null || dst == null) return null;
+        src = src.trim().toLowerCase(); dst = dst.trim().toLowerCase();
+        if (!users.containsKey(src) || !users.containsKey(dst)) return null;
+        if (src.equals(dst)) return List.of(src);
+
+        // Dijkstra
+        Map<String, Integer> dist = new HashMap<>();
+        Map<String, String> parent = new HashMap<>();
+        PriorityQueue<String> pq = new PriorityQueue<>(Comparator.comparingInt(dist::get));
+
+        for (String u : users.keySet()) dist.put(u, Integer.MAX_VALUE);
+        dist.put(src, 0); parent.put(src, null); pq.add(src);
+
+        while (!pq.isEmpty()) {
+            String u = pq.poll();
+            if (!adj.containsKey(u)) continue;
+            if (u.equals(dst)) break;
+
+            for (Map.Entry<String,Integer> e : adj.get(u).entrySet()) {
+                String v = e.getKey();
+                int w = e.getValue();
+                if (w <= 0) continue; // skip bad weights
+                int nd = dist.get(u) + w;
+                if (nd < dist.get(v)) {
+                    dist.put(v, nd);
+                    parent.put(v, u);
+                    pq.remove(v); // update key
+                    pq.add(v);
+                }
+            }
+        }
+
+        if (dist.get(dst) == Integer.MAX_VALUE) return null;
+
+        // reconstruct path
+        LinkedList<String> path = new LinkedList<>();
+        for (String at = dst; at != null; at = parent.get(at)) path.addFirst(at);
+        return path;
+    }
+
+
     public static List<String> findShortestPath(String user1, String user2, Map<String, User> users) {
         if (user1 == null || user2 == null) return null;
         user1 = user1.trim().toLowerCase();
