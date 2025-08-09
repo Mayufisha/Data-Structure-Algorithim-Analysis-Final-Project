@@ -33,27 +33,35 @@ public class NetworkStats {
                 .collect(Collectors.toList());
     }
 
-    public void displayStats() {
+    public int getTotalEdgeWeight(Map<String, Map<String,Integer>> adj) {
+        // sum all weights divided by 2 (undirected stored twice)
+        int sum = 0;
+        for (var m : adj.values()) for (int w : m.values()) sum += w;
+        return sum / 2;
+    }
+
+    public double getAverageEdgeWeight(Map<String, Map<String,Integer>> adj) {
+        int edges = getTotalConnections();
+        if (edges == 0) return 0.0;
+        return (double) getTotalEdgeWeight(adj) / edges;
+    }
+
+    public void displayStats(Map<String, Map<String,Integer>> adj) {
         System.out.println("\n=== Network Statistics ===");
         System.out.println("Total users: " + getTotalUsers());
         System.out.println("Total friendships: " + getTotalConnections());
         System.out.printf("Average friends per user: %.2f\n", getAverageFriendsPerUser());
+        System.out.println("Total edge weight: " + getTotalEdgeWeight(adj));
+        System.out.printf("Average edge weight: %.2f\n", getAverageEdgeWeight(adj));
 
-        // Get the max number of friends
-        int maxFriends = users.values().stream()
-                .mapToInt(User::getFriendCount)
-                .max()
-                .orElse(0);
-
-        // Get all users who have max number of friends
-        List<String> mostPopularUsers = users.values().stream()
+        // (optional) print all most-popular users (ties)
+        int maxFriends = users.values().stream().mapToInt(User::getFriendCount).max().orElse(0);
+        List<String> tops = users.values().stream()
                 .filter(u -> u.getFriendCount() == maxFriends)
                 .map(User::getUsername)
-                .sorted()
-                .toList();
-
-        if (!mostPopularUsers.isEmpty()) {
-            System.out.println("Most popular user(s): " + String.join(", ", mostPopularUsers)
+                .sorted().toList();
+        if (!tops.isEmpty()) {
+            System.out.println("Most popular user(s): " + String.join(", ", tops)
                     + " (" + maxFriends + " friends)");
         }
     }

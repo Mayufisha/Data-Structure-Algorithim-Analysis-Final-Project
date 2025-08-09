@@ -47,11 +47,22 @@ public class SocialNetworkUI {
         String user1 = scanner.nextLine();
         System.out.print("Enter second user: ");
         String user2 = scanner.nextLine();
+        System.out.print("Enter connection weight (positive integer): ");
+        String wStr = scanner.nextLine().trim();
 
-        if (network.addFriendship(user1, user2)) {
+        int weight;
+        try {
+            weight = Integer.parseInt(wStr);
+            if (weight <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Weight must be a positive integer!");
+            return;
+        }
+
+        if (network.addFriendship(user1, user2, weight)) {
             System.out.println("Friendship created between '" +
                     User.sanitizeUsername(user1) + "' and '" +
-                    User.sanitizeUsername(user2) + "'!");
+                    User.sanitizeUsername(user2) + "' with weight " + weight + "!");
         } else {
             if (!User.areValidUsernames(user1, user2)) {
                 System.out.println("Error: Invalid usernames!");
@@ -60,7 +71,7 @@ public class SocialNetworkUI {
             } else if (!network.userExists(user1) || !network.userExists(user2)) {
                 System.out.println("Error: One or both users do not exist!");
             } else {
-                System.out.println("Error: Users are already friends!");
+                System.out.println("Error: Users are already friends or weight invalid!");
             }
         }
     }
@@ -201,7 +212,7 @@ public class SocialNetworkUI {
             case 5: handleMutualFriends(); break;
             case 6: handleFriendSuggestions(); break;
             case 7: handleShowAllUsers(); break;
-            case 8: network.getStats().displayStats(); break;
+            case 8: network.getStats().displayStats(network.getAdjacency()); break;
             case 9:
                 handleShortestPath();
                 break;
