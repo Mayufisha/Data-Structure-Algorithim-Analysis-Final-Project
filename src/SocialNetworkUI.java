@@ -12,7 +12,7 @@ public class SocialNetworkUI {
     }
 
     public void displayMenu() {
-        System.out.println("Social Network Graph Explorer Menu: ");
+        System.out.println("\nSocial Network Graph Explorer Menu: ");
 
         System.out.println("1. Add user");
         System.out.println("2. Add friendship");
